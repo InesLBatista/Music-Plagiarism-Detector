@@ -4,13 +4,25 @@
 
 function intervals = notes_to_intervals(notes)
     % Convert a sequence of note names to intervals (transposition invariant).
-    % notes: cell array of note strings like {'C', 'C#', 'D', ...}
-    pitch_map = containers.Map({'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'}, ...
-                               {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11});
+    % notes: cell array of note strings like {'C', 'C#', 'Db', 'D', ...}
+    pitch_map = containers.Map({
+        'C','B#','C#','Db','D','D#','Eb','E','Fb','E#','F','F#','Gb', ...
+        'G','G#','Ab','A','A#','Bb','B','Cb'}, ...
+        {0,0,1,1,2,3,3,4,4,5,5,6,6,7,8,8,9,10,10,11,11});
     intervals = [];
     for i = 1:length(notes)-1
-        intervals = [intervals, pitch_map(notes{i+1}) - pitch_map(notes{i})];
+        note1 = normalize_note_name(notes{i});
+        note2 = normalize_note_name(notes{i+1});
+        if ~isKey(pitch_map, note1) || ~isKey(pitch_map, note2)
+            error('Unknown note name: %s or %s', notes{i}, notes{i+1});
+        end
+        intervals = [intervals, pitch_map(note2) - pitch_map(note1)];
     end
+end
+
+function note = normalize_note_name(raw_note)
+    % Normalize note name string to uppercase and remove whitespace.
+    note = upper(strtrim(raw_note));
 end
 
 function norm_durations = normalize_rhythm(durations)
