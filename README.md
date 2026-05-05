@@ -1,5 +1,9 @@
 # Music-Plagiarism-Detector
 A music plagiarism detection tool based on the “8-note rule,” using k-shingles of note sequences to compare melodies. It leverages Naive Bayes, MinHash with LSH, and Bloom Filters to efficiently detect exact and near-duplicate musical patterns.
+
+## Current Progress
+- **TODO 1 (Preprocessing)**: Implemented data representation, normalization functions (notes_to_intervals, normalize_rhythm), and extract_features for separate note and rhythm processing.
+
 ## Future Development
 The project is structured as follows:
 
