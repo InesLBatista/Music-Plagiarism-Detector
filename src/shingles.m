@@ -1,0 +1,1 @@
+% TODO 2: Implement the k-shingles generation for note sequences, focusing on the 8-note rule to create shingles for melody comparison.

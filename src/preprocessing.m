@@ -1,0 +1,1 @@
+% TODO 1: Develop functions to load and preprocess musical data, such as parsing MIDI files or note sequences into a usable format for analysis.

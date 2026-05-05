@@ -1,0 +1,1 @@
+% TODO 5: Develop the Naive Bayes classifier to classify melodies based on features extracted from shingles, for detecting plagiarism patterns.

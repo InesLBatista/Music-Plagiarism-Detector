@@ -1,0 +1,1 @@
+% TODO 4: Implement MinHash algorithm combined with Locality Sensitive Hashing (LSH) to efficiently find similar melodies using shingles.

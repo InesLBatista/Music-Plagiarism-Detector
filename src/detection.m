@@ -1,0 +1,1 @@
+% TODO 6: Integrate all components to perform the core plagiarism detection, combining preprocessing, shingles, and the algorithms to compare melodies and identify duplicates.
