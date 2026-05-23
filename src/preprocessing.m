@@ -31,7 +31,7 @@ function melody = remove_rests(melody)
 end
 
 function melody = remove_short_notes(melody)
-    % Remove extremely short notes that may come from MIDI noise.
+    % Remove extremely short notes.
     if isempty(melody)
         return;
     end
@@ -43,7 +43,6 @@ function melody = remove_short_notes(melody)
 end
 
 function melody = quantize_durations(melody)
-    % Quantize note durations to reduce MIDI timing noise.
     if isempty(melody)
         return;
     end

@@ -1,7 +1,6 @@
 % TODO 5: Develop the Naive Bayes classifier to classify melodies based on features extracted from shingles, for detecting plagiarism patterns.
 
 function [predicted_labels, model, log_scores] = naive_bayes(train_data, train_labels, test_data, alpha)
-    % Multinomial Naive Bayes classifier for numeric features or shingle sets.
     if nargin < 4
         alpha = 1;
     end
