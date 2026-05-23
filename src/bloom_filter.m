@@ -2,7 +2,7 @@
 
 function bf = bloom_create(num_bits, num_hashes)
     % Creates a new empty Bloom Filter.
-    % num_bits: how many switches — more = fewer false positives, more memory
+    % num_bits: how many switches â€” more = fewer false positives, more memory
     % num_hashes: how many different hash functions to use per item
     % Returns a struct with the bit array and the filter's settings.
     if nargin < 1

@@ -3,7 +3,7 @@
 function sig = minhash_signature(shingle_set, num_hashes)
 	% Gera a assinatura MinHash de um conjunto de shingles
 	% shingle_set: vetor de inteiros (hashes dos shingles)
-	% num_hashes: número de funções hash (tamanho da assinatura)
+	% num_hashes: nÃºmero de funÃ§Ãµes hash (tamanho da assinatura)
 	if nargin < 2
 		num_hashes = 100;
 	end
@@ -20,9 +20,9 @@ function sig = minhash_signature(shingle_set, num_hashes)
 end
 
 function buckets = lsh_buckets(signatures, bands)
-	% Aplica LSH às assinaturas MinHash
+	% Aplica LSH Ã s assinaturas MinHash
 	% signatures: matriz (num_melodias x num_hashes)
-	% bands: número de bandas para LSH
+	% bands: nÃºmero de bandas para LSH
 	[num_melodies, num_hashes] = size(signatures);
 	rows_per_band = floor(num_hashes / bands);
 	buckets = cell(bands, 1);
@@ -52,9 +52,9 @@ end
 
 function similar_pairs = find_similar_melodies_lsh(shingle_sets, num_hashes, bands)
 	% Encontra pares de melodias similares usando MinHash + LSH
-	% shingle_sets: cell array, cada célula é um vetor de shingles de uma melodia
+	% shingle_sets: cell array, cada cÃ©lula Ã© um vetor de shingles de uma melodia
 	% num_hashes: tamanho da assinatura MinHash
-	% bands: número de bandas para LSH
+	% bands: nÃºmero de bandas para LSH
 	if nargin < 2
 		num_hashes = 100;
 	end
