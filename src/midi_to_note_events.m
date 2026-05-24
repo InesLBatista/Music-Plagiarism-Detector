@@ -253,7 +253,7 @@ function events = empty_events()
 end
 
 function name = midi_note_name(note_number)
-    % Convert MIDI note number to a readable note name, e.g. 60 -> C4.
+    % Convert MIDI note number to a readable note name
     names = {'C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'};
     octave = floor(note_number / 12) - 1;
     name = sprintf('%s%d', names{mod(note_number, 12) + 1}, octave);
