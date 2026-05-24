@@ -1,4 +1,5 @@
-% TODO 1: Develop functions to load and preprocess musical data, such as parsing MIDI files or note sequences into a usable format for analysis.
+% DONE 1: Preprocess simple note-duration melodies into interval and rhythm features.
+% MIDI loading is handled separately by midi_to_note_events.m and related helpers.
 
 % Data Representation: Each note as (note, duration), represented as struct('note', 'C', 'duration', 1.0)
 % Velocity is ignored if present. Rests are removed and very short notes are filtered.

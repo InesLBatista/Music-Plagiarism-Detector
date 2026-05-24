@@ -1,1 +1,2 @@
-% TODO 7: Implement the main script to orchestrate the plagiarism detection process, including loading data, preprocessing, applying algorithms, and outputting results.
+% TODO 7: Implement the main executable script.
+% This should orchestrate dataset loading, preprocessing, detection, and output reporting.

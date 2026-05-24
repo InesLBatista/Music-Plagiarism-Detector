@@ -27,6 +27,10 @@ The project is organized into the following folders:
 Main files in `src/`:
 
 - `preprocessing.m`: melody preprocessing.
+- `midi_to_note_events.m`: MIDI parsing into normalized note events.
+- `melody_events_to_interval_duration_sequence.m`: conversion from note events to `(melodic_interval, quantized_duration)` sequences.
+- `generate_interval_duration_sequence_from_midi.m`: end-to-end helper for MIDI files.
+- `get_interval_duration_shingle_set.m`: shingle generation using 8 interval-duration pairs.
 - `shingles.m`: shingle generation and hashing.
 - `bloom_filter.m`: Bloom Filter implementation.
 - `minhash_lsh.m`: MinHash and Locality Sensitive Hashing implementation.
@@ -49,6 +53,43 @@ The implemented operations include:
 - rhythmic normalization through ratios between consecutive durations.
 
 The conversion to intervals is important because it makes the representation invariant to transposition. For example, two melodies with the same melodic contour but played in different keys can still be compared meaningfully.
+
+### 4.1.1 MIDI Dataset Treatment
+
+For datasets such as MAESTRO, the raw MIDI files must first be converted into a normalized intermediate representation. The implemented MIDI stage extracts note events with:
+
+- MIDI note number;
+- pitch class;
+- note name;
+- onset in ticks and beats;
+- duration in ticks and beats;
+- velocity;
+- channel and track.
+
+From these events, the project can generate sequences of `(melodic_interval, quantized_duration)`. By default, the melody extraction keeps the highest note at each onset, which is a simple approximation for piano melody extraction in polyphonic MIDI files.
+
+Example:
+
+```matlab
+addpath('src');
+
+midi_path = 'data/maestro-v3.0.0/2018/MIDI-Unprocessed_Chamber3_MID--AUDIO_10_R3_2018_wav--1.midi';
+
+options.duration_grid = 0.25;      % sixteenth-note grid in quarter-note beats
+options.extraction = 'top_note_per_onset';
+options.interval_mod12 = false;    % keep signed melodic direction
+
+[sequence, melody, events, info] = generate_interval_duration_sequence_from_midi(midi_path, options);
+shingle_set = get_interval_duration_shingle_set(sequence, 8);
+```
+
+The resulting `sequence` is an `N x 2` matrix:
+
+```matlab
+[melodic_interval, quantized_duration]
+```
+
+Each row represents the movement from the previous melody note to the current note, paired with the current note duration.
 
 ### 4.2 Shingle Generation
 

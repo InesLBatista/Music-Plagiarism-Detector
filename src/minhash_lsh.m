@@ -1,4 +1,5 @@
-% TODO 4: Implement MinHash algorithm combined with Locality Sensitive Hashing (LSH) to efficiently find similar melodies using shingles.
+% DONE 4: MinHash combined with Locality Sensitive Hashing (LSH).
+% Used to find candidate similar melodies efficiently from shingle sets.
 
 function sig = minhash_signature(shingle_set, num_hashes)
 	% Gera a assinatura MinHash de um conjunto de shingles

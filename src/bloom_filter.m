@@ -1,8 +1,9 @@
-% TODO 3: Create a Bloom Filter implementation to quickly check for the presence of note sequences in a set, aiding in efficient duplicate detection.
+% DONE 3: Bloom Filter implementation for quick probabilistic checks of shingle presence.
+% Used as a fast first pass to estimate overlap between melodies before more detailed comparison.
 
 function bf = bloom_create(num_bits, num_hashes)
     % Creates a new empty Bloom Filter.
-    % num_bits: how many switches â€” more = fewer false positives, more memory
+    % num_bits: how many switches - more = fewer false positives, more memory
     % num_hashes: how many different hash functions to use per item
     % Returns a struct with the bit array and the filter's settings.
     if nargin < 1
