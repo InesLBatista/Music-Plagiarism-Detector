@@ -10,7 +10,11 @@ function results = generate_dataset_report(varargin)
 
     params = parse_report_inputs(root_dir, varargin{:});
     if ~exist(params.results_dir, 'dir')
-        mkdir(params.results_dir);
+        [status, msg, msgid] = mkdir(params.results_dir);
+        if ~status
+            error('generate_dataset_report:CreateResultsDirFailed', ...
+                'Could not create results directory %s: %s (%s)', params.results_dir, msg, msgid);
+        end
     end
 
     fprintf('Generating dataset report in %s\n', params.results_dir);
@@ -45,7 +49,6 @@ function results = generate_dataset_report(varargin)
     write_summary_text(report_stats, all_results, params);
     export_top_pairs_table(all_results.global_pairs_ranked, params.results_dir);
     plot_best_similarity_histogram(similarity_scores, params.results_dir);
-    plot_query_vs_database(params, params.results_dir);
 
     fprintf('Dataset report generation completed. Files written to %s\n', params.results_dir);
 end
@@ -136,7 +139,7 @@ function export_top_pairs_table(global_pairs, results_dir)
 end
 
 function plot_best_similarity_histogram(similarity_scores, results_dir)
-    fig = figure('Visible', 'off');
+    fig = figure('Visible', 'on');
     
     % Define bins apropriados para a escala dos dados
     max_val = max(similarity_scores);
@@ -162,50 +165,4 @@ function plot_best_similarity_histogram(similarity_scores, results_dir)
     close(fig);
 end
 
-function plot_query_vs_database(params, results_dir)
-    all_midis = collect_midi_files(params.data_dir, true);
-    if isempty(all_midis)
-        return;
-    end
-    if ~isinf(params.max_database)
-        all_midis = all_midis(1:min(numel(all_midis), params.max_database));
-    end
 
-    query_midi = all_midis{1};
-    database_midis = all_midis(~strcmp(all_midis, query_midi));
-    if isempty(database_midis)
-        return;
-    end
-
-    q_shingles = shingle_set_from_midi(query_midi, params);
-    similarities = zeros(numel(database_midis), 1);
-    for i = 1:numel(database_midis)
-        db_shingles = shingle_set_from_midi(database_midis{i}, params);
-        similarities(i) = jaccard_similarity(q_shingles, db_shingles);
-    end
-
-    [sorted_values, sorted_indices] = sort(similarities, 'descend');
-    sorted_paths = database_midis(sorted_indices);
-    top_n = min(40, numel(sorted_values));
-
-    fig = figure('Visible', 'off');
-    bar(sorted_values(1:top_n), 'FaceColor', [0.4, 0.7, 0.3]);
-    xlabel('Candidate index (sorted by similarity)');
-    ylabel('Similarity to query');
-    title(sprintf('Query vs database similarities\nQuery: %s', get_short_name(query_midi)));
-    ylim([0, 1]);
-    grid on;
-    saveas(fig, fullfile(results_dir, 'query_vs_database_top_candidates.png'));
-    close(fig);
-
-    % Save the first query comparison details for the report.
-    details_file = fullfile(results_dir, 'query_1_vs_database.csv');
-    summary_table = table(sorted_paths(1:top_n)', sorted_values(1:top_n), ...
-        'VariableNames', {'CandidatePath', 'Similarity'});
-    writetable(summary_table, details_file);
-end
-
-function short_name = get_short_name(path)
-    [~, name, ext] = fileparts(path);
-    short_name = [name, ext];
-end
