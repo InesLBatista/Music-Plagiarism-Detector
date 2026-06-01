@@ -1,5 +1,5 @@
 % DONE 1: Preprocess simple note-duration melodies into interval and rhythm features.
-% MIDI loading is handled separately by midi_to_note_events.m and related helpers.
+% NOTE: This is a legacy version. For the current pipeline, use melody_events_to_interval_duration_sequence.m.
 
 % Data Representation: Each note as (note, duration), represented as struct('note', 'C', 'duration', 1.0)
 % Velocity is ignored if present. Rests are removed and very short notes are filtered.

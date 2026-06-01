@@ -1,8 +1,3 @@
-% TODO 6: Integrate the full plagiarism detection workflow.
-% This should combine MIDI loading, interval-duration sequence generation,
-% shingle extraction, Bloom Filter checks, MinHash/LSH candidate search,
-% and final similarity scoring.
-
 function [similarity, candidates] = detect_plagiarism(query_midi, database_midis, options)
 %DETECT_PLAGIARISM Integrate the full plagiarism detection workflow.
 %   [similarity, candidates] = detect_plagiarism(query_midi, database_midis)
@@ -44,8 +39,13 @@ function [similarity, candidates] = detect_plagiarism(query_midi, database_midis
         db_shingle_sets{i} = get_interval_duration_shingle_set(db_seq, k);
         
         % 3. Bloom Filter creation for each database melody
-        % Using 10000 bits and 5 hashes as a reasonable default
-        bf = bloom_create(10000, 5);
+        % Using configurable bits and hashes
+        bf_bits = 10000;
+        bf_hashes = 5;
+        if isfield(options, 'bf_bits'), bf_bits = options.bf_bits; end
+        if isfield(options, 'bf_hashes'), bf_hashes = options.bf_hashes; end
+        
+        bf = bloom_create(bf_bits, bf_hashes);
         db_bloom_filters{i} = bloom_add_set(bf, db_shingle_sets{i});
     end
 
@@ -69,7 +69,10 @@ function [similarity, candidates] = detect_plagiarism(query_midi, database_midis
     
     % find_similar_melodies_lsh returns pairs [idx1, idx2]
     % We are interested in pairs that include the query (index num_db + 1)
-    similar_pairs = find_similar_melodies_lsh(all_shingle_sets, num_hashes, bands);
+    lsh_threshold = 0.8;
+    if isfield(options, 'lsh_threshold'), lsh_threshold = options.lsh_threshold; end
+    
+    similar_pairs = find_similar_melodies_lsh(all_shingle_sets, num_hashes, bands, lsh_threshold);
     
     candidates = [];
     candidate_indices = [];
@@ -95,25 +98,3 @@ function [similarity, candidates] = detect_plagiarism(query_midi, database_midis
         candidates = [candidates; struct('index', db_idx, 'path', database_midis{db_idx}, ...
             'similarity', sim, 'bf_estimate', bf_scores(db_idx))]; %#ok<AGROW>
     end
-
-    % 6. Final similarity scoring (max similarity among candidates)
-    if isempty(candidates)
-        similarity = 0;
-    else
-        [similarity, ~] = max([candidates.similarity]);
-        % Sort candidates by similarity descending
-        [~, sort_idx] = sort([candidates.similarity], 'descend');
-        candidates = candidates(sort_idx);
-    end
-end
-
-function sim = jaccard_similarity(set1, set2)
-    % Similaridade Jaccard entre dois conjuntos
-    if isempty(set1) || isempty(set2)
-        sim = 0;
-        return;
-    end
-    inter = numel(intersect(set1, set2));
-    union_sz = numel(union(set1, set2));
-    sim = inter / union_sz;
-end
