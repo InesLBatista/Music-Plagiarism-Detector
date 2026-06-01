@@ -9,6 +9,8 @@ function sig = minhash_signature(shingle_set, num_hashes)
 		num_hashes = 100;
 	end
 	max_shingle = 2^31-1;
+
+
 	rng(42); % Para reprodutibilidade
 	a = randi([1, max_shingle], 1, num_hashes);
 	b = randi([0, max_shingle], 1, num_hashes);
@@ -18,6 +20,8 @@ function sig = minhash_signature(shingle_set, num_hashes)
 		hashes = mod(a(i) * double(shingle_set) + b(i), p);
 		sig(i) = min(hashes);
 	end
+
+
 end
 
 function buckets = lsh_buckets(signatures, bands)
@@ -88,6 +92,8 @@ function similar_pairs = find_similar_melodies_lsh(shingle_sets, num_hashes, ban
 			end
 		end
 	end
+	
+	
 	% Calcula similaridade Jaccard real para os candidatos
 	keys = candidate_pairs.keys;
 	similar_pairs = [];
@@ -100,4 +106,6 @@ function similar_pairs = find_similar_melodies_lsh(shingle_sets, num_hashes, ban
 			similar_pairs = [similar_pairs; pair];
 		end
 	end
+
+	
 end

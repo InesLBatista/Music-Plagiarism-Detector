@@ -41,6 +41,8 @@ function result = bloom_check(bf, shingle_hash)
     result = all(bf.bits(positions));
 end
 
+
+
 function count = bloom_count_matches(bf, shingle_set)
     % Counts how many shingles from a melody's set appear in the filter.
     % Useful to estimate overlap between two melodies.
@@ -64,3 +66,5 @@ function positions = get_bit_positions(hash_val, num_hashes, num_bits)
     end
     positions = unique(positions);
 end
+
+

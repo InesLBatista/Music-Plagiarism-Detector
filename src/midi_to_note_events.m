@@ -225,13 +225,17 @@ function [active, events] = close_note(active, events, channel, note, off_veloci
     event.note_name = midi_note_name(double(note));
     event.onset_tick = onset_tick;
     event.duration_tick = duration_tick;
+
+
     event.onset_beat = onset_tick / ticks_per_quarter;
     event.duration_beat = duration_tick / ticks_per_quarter;
     event.velocity = on_velocity;
     event.off_velocity = double(off_velocity);
     event.channel = channel;
     event.track = track_idx;
-    events(end + 1) = event; %#ok<AGROW>
+    events(end + 1) = event;
+
+        
 end
 
 function events = sort_events(events)

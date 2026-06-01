@@ -122,8 +122,12 @@ function melody = top_note_per_onset(events)
         same_onset = find(onset_ticks == unique_onsets(i));
         notes = [events(same_onset).note_number];
         durations = [events(same_onset).duration_beat];
+
+
         [~, idx] = sortrows([-notes(:), -durations(:)], [1, 2]);
         selected = events(same_onset(idx(1)));
+
+        
         melody(end + 1) = event_to_melody_note(selected); %#ok<AGROW>
     end
 end
