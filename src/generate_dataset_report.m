@@ -137,10 +137,26 @@ end
 
 function plot_best_similarity_histogram(similarity_scores, results_dir)
     fig = figure('Visible', 'off');
-    histogram(similarity_scores, 'BinWidth', 0.05, 'FaceColor', [0.2, 0.6, 0.8]);
+    
+    % Define bins apropriados para a escala dos dados
+    max_val = max(similarity_scores);
+    if max_val <= 0.1
+        % Para valores muito pequenos (como no teu caso), usa bins mais finos
+        edges = 0:0.002:0.1;  % bins de 0.002 (0.2%) até 0.1
+    else
+        edges = 0:0.01:1;      % bins de 1% para valores normais
+    end
+    
+    histogram(similarity_scores, edges, 'FaceColor', [0.2, 0.6, 0.8]);
     xlabel('Best similarity per query');
     ylabel('Number of queries');
     title('Dataset best-similarity distribution');
+    
+    % Adiciona linha vertical no limiar de plágio (0.01)
+    hold on;
+    line([0.01, 0.01], ylim, 'Color', 'red', 'LineStyle', '--', 'LineWidth', 1.5);
+    legend({'Distribuição', 'Limiar de plágio (0.01)'}, 'Location', 'best');
+    
     grid on;
     saveas(fig, fullfile(results_dir, 'hist_best_similarity.png'));
     close(fig);
