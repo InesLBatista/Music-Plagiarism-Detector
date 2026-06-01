@@ -1,1 +1,0 @@
-O report incluí informação sobre os datasets, onde foram buscados e como são tratados. Constituem cerca de mais de 1000 ficheiros pelo que não foram incluídos no zip de entrega final.
