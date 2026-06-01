@@ -1,4 +1,3 @@
-% DONE: Implement the main executable script.
 % This should orchestrate dataset loading, preprocessing, detection, and output reporting.
 
 function results = main(varargin)
@@ -494,16 +493,6 @@ end
 function shingles = shingle_set_from_midi(midi_path, options)
 	[sequence, ~, ~, ~] = generate_interval_duration_sequence_from_midi(midi_path, options);
 	shingles = get_interval_duration_shingle_set(sequence, options.shingle_k);
-end
-
-function sim = jaccard_similarity(set1, set2)
-	if isempty(set1) || isempty(set2)
-		sim = 0;
-		return;
-	end
-	inter = numel(intersect(set1, set2));
-	union_sz = numel(union(set1, set2));
-	sim = inter / union_sz;
 end
 
 function print_report(candidates, max_similarity, method, top_k_display)

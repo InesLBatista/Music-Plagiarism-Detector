@@ -1,5 +1,4 @@
 % DONE 2: Generate k-shingles for melodic interval sequences and combined pitch-rhythm sequences.
-% For explicit (interval, duration) pair shingles, use get_interval_duration_shingle_set.m.
 
 function shingle_set = get_shingle_set(note_intervals, k)
     % Main function. Takes a melody and produces a set of unique numbers.

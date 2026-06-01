@@ -4,7 +4,7 @@
 function sig = minhash_signature(shingle_set, num_hashes)
 	% Gera a assinatura MinHash de um conjunto de shingles
 	% shingle_set: vetor de inteiros (hashes dos shingles)
-	% num_hashes: nÃºmero de funÃ§Ãµes hash (tamanho da assinatura)
+	% num_hashes: número de funções hash (tamanho da assinatura)
 	if nargin < 2
 		num_hashes = 100;
 	end
@@ -21,9 +21,9 @@ function sig = minhash_signature(shingle_set, num_hashes)
 end
 
 function buckets = lsh_buckets(signatures, bands)
-	% Aplica LSH Ã s assinaturas MinHash
+	% Aplica LSH às assinaturas MinHash
 	% signatures: matriz (num_melodias x num_hashes)
-	% bands: nÃºmero de bandas para LSH
+	% bands: número de bandas para LSH
 	[num_melodies, num_hashes] = size(signatures);
 	rows_per_band = floor(num_hashes / bands);
 	buckets = cell(bands, 1);
@@ -51,17 +51,21 @@ function h = hash_band(band)
 	end
 end
 
-function similar_pairs = find_similar_melodies_lsh(shingle_sets, num_hashes, bands)
+function similar_pairs = find_similar_melodies_lsh(shingle_sets, num_hashes, bands, threshold)
 	% Encontra pares de melodias similares usando MinHash + LSH
-	% shingle_sets: cell array, cada cÃ©lula Ã© um vetor de shingles de uma melodia
+	% shingle_sets: cell array, cada célula é um vetor de shingles de uma melodia
 	% num_hashes: tamanho da assinatura MinHash
-	% bands: nÃºmero de bandas para LSH
+	% bands: número de bandas para LSH
+    % threshold: similaridade Jaccard mínima para considerar um par similar
 	if nargin < 2
 		num_hashes = 100;
 	end
 	if nargin < 3
 		bands = 20;
 	end
+    if nargin < 4
+        threshold = 0.8;
+    end
 	num_melodies = length(shingle_sets);
 	signatures = zeros(num_melodies, num_hashes);
 	for i = 1:num_melodies
@@ -87,7 +91,6 @@ function similar_pairs = find_similar_melodies_lsh(shingle_sets, num_hashes, ban
 	% Calcula similaridade Jaccard real para os candidatos
 	keys = candidate_pairs.keys;
 	similar_pairs = [];
-	threshold = 0.8; % pode ajustar
 	for k = 1:length(keys)
 		pair = candidate_pairs(keys{k});
 		set1 = shingle_sets{pair(1)};
@@ -97,11 +100,4 @@ function similar_pairs = find_similar_melodies_lsh(shingle_sets, num_hashes, ban
 			similar_pairs = [similar_pairs; pair];
 		end
 	end
-end
-
-function sim = jaccard_similarity(set1, set2)
-	% Similaridade Jaccard entre dois conjuntos
-	inter = numel(intersect(set1, set2));
-	union_sz = numel(union(set1, set2));
-	sim = inter / union_sz;
 end
