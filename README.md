@@ -104,8 +104,69 @@ with format:
 [melodic_interval, quantized_duration]
 ```
 
+## Run Main And Demo
+Start MATLAB in the project root and run:
+
+```matlab
+addpath('src');
+```
+
+### Main (Default: all-vs-all)
+By default, `main` compares every MIDI file in the dataset as query against all other files (excluding itself):
+
+```matlab
+r = main;
+```
+
+Useful options:
+
+```matlab
+% Run on a smaller subset (faster debug)
+r = main('max_database', 20);
+
+% Show more rows in terminal report
+r = main('max_database', 20, 'top_k_display', 25);
+
+% Single-query mode (query against selected database)
+r = main('all_vs_all', false, 'max_database', 30);
+```
+
+`main` returns a struct. In all-vs-all mode, key fields are:
+- `r.mode` (`'all_vs_all'`)
+- `r.total_queries`
+- `r.query_reports`
+- `r.global_pairs_ranked`
+
+### Demo Mode
+Demo mode runs presentation scenarios (self-match, different-file control, half-similar simulation, and mini multi-vs-multi):
+
+```matlab
+d = main('demo_mode', true);
+```
+
+Useful demo options:
+
+```matlab
+% Define mini multi-vs-multi subset size used in demo scenario D
+d = main('demo_mode', true, 'demo_all_vs_all_size', 6);
+
+% Show more top pairs/candidates in demo reports
+d = main('demo_mode', true, 'demo_all_vs_all_size', 8, 'top_k_display', 10);
+```
+
+`demo_mode` returns a struct with scenario outputs, including:
+- `d.self_scenario`
+- `d.diff_scenario`
+- `d.half_similar_scenario`
+- `d.multi_vs_multi_scenario`
+
+### Recommended quick validation flow
+1. `r = main('max_database', 4, 'top_k_display', 3);`
+2. `d = main('demo_mode', true, 'demo_all_vs_all_size', 4);`
+3. `r = main;` (full dataset)
+
 ## Comparison Modules
-### Bloom Filte
+### Bloom Filter
 The Bloom Filter allows the system to quickly check whether certain shingles may exist in a reference melody. It is useful as a first filtering step because it is fast and does not produce false negatives, although it may produce false positives.
 
 ### MinHash And LSH
