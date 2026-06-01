@@ -1,6 +1,20 @@
 test_dir = fileparts(mfilename('fullpath'));
 addpath(fullfile(test_dir, '..', 'src'));
 
+data_dir = fullfile(test_dir, '..', 'data', 'maestro-v3.0.0');
+midi_files = find_dataset_midi_files(data_dir, 1);
+
+if ~isempty(midi_files)
+    [events, ~] = midi_to_note_events(midi_files{1});
+    options.duration_grid = 0.25;
+    options.extraction = 'top_note_per_onset';
+    [sequence, melody, info] = melody_events_to_interval_duration_sequence(events, options);
+    assert(size(sequence, 2) == 2, 'Dataset-derived sequence must be Nx2.');
+    assert(info.num_pairs == size(sequence, 1), 'num_pairs must match actual sequence length.');
+    assert(info.num_melody_notes == numel(melody), 'Metadata num_melody_notes must match melody entries.');
+    assert(all(sequence(:,2) > 0), 'Quantized durations must be positive.');
+end
+
 events = struct('note_number', {}, 'pitch_class', {}, 'note_name', {}, ...
     'onset_tick', {}, 'duration_tick', {}, 'onset_beat', {}, ...
     'duration_beat', {}, 'velocity', {}, 'off_velocity', {}, ...
@@ -36,4 +50,24 @@ function event = make_event(note_number, onset_beat, duration_beat, velocity)
     event.off_velocity = 0;
     event.channel = 1;
     event.track = 1;
+end
+
+function paths = find_dataset_midi_files(root_dir, max_count)
+    paths = {};
+    if ~exist(root_dir, 'dir')
+        return;
+    end
+    midi_files = dir(fullfile(root_dir, '**', '*.midi'));
+    if isempty(midi_files)
+        midi_files = dir(fullfile(root_dir, '**', '*.mid'));
+    end
+    if isempty(midi_files)
+        return;
+    end
+    full_paths = fullfile({midi_files.folder}, {midi_files.name});
+    if nargin < 2 || isempty(max_count) || numel(full_paths) <= max_count
+        paths = full_paths;
+    else
+        paths = full_paths(1:max_count);
+    end
 end

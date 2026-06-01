@@ -160,6 +160,26 @@ d = main('demo_mode', true, 'demo_all_vs_all_size', 8, 'top_k_display', 10);
 - `d.half_similar_scenario`
 - `d.multi_vs_multi_scenario`
 
+### Dataset results and report generation
+A new reporting helper generates integrated dataset analytics and saves outputs into the `results/` directory.
+
+```matlab
+r = generate_dataset_report();
+```
+
+This writes:
+- `results/dataset_summary.txt`
+- `results/top_pairs.csv`
+- `results/hist_best_similarity.png`
+- `results/query_vs_database_top_candidates.png`
+- `results/dataset_report.mat`
+
+Custom options are supported:
+
+```matlab
+r = generate_dataset_report('max_database', 50, 'results_dir', fullfile(pwd, 'results', 'my_report'));
+```
+
 ### Recommended quick validation flow
 1. `r = main('max_database', 4, 'top_k_display', 3);`
 2. `d = main('demo_mode', true, 'demo_all_vs_all_size', 4);`
@@ -188,6 +208,7 @@ Tests are located in tests/ and are separated by component:
 - test_bloom_filter.m: tests Bloom Filter operations.
 - test_minhash_lsh.m: tests MinHash and LSH.
 - test_naive_bayes.m: tests Naive Bayes classification.
+- test_dataset_report.m: tests dataset-level report generation and results export.
 
 
 ## Current Status
