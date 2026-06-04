@@ -198,35 +198,6 @@ J(A, B) = |A ∩ B| / |A ∪ B|
 
 ### Naive Bayes
 The Naive Bayes classifier can be used when labeled examples are available. It accepts both numeric feature matrices and shingle sets, converting shingles into a count matrix.
-
-## Tests
-Tests are located in tests/ and are separated by component:
-- test_midi_to_note_events.m: tests basic MIDI parsing.
-- test_generate_interval_duration_sequence_from_midi.m: tests the MIDI-to-sequence pipeline.
-- test_interval_duration_sequence.m: tests sequence creation from artificial events.
-- test_interval_duration_shingles.m: tests interval-duration pair shingles.
-- test_bloom_filter.m: tests Bloom Filter operations.
-- test_minhash_lsh.m: tests MinHash and LSH.
-- test_naive_bayes.m: tests Naive Bayes classification.
-- test_dataset_report.m: tests dataset-level report generation and results export.
-
-
-## Current Status
-Implemented:
-- basic MIDI parsing;
-- conversion from MIDI to normalized musical events;
-- generation of `(melodic_interval, quantized_duration)` sequences;
-- shingle generation over interval-duration pairs;
-- preprocessing for simple melodies;
-- Bloom Filter;
-- MinHash and LSH;
-- Jaccard similarity for candidates;
-- Naive Bayes;
-- component-level tests.
-
-Still to do:
-- integrate everything in `detection.m`;
-- implement `main.m`;
 - define a final plagiarism score;
 - validate the system with real MAESTRO subsets;
 - improve melody extraction for polyphonic MIDI.
